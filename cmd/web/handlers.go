@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
+	"text/template"
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -16,7 +19,29 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte("Hello from Snippetbox"))
+	files := []string{
+		"./ui/html/base.tmpl",
+		"./ui/html/pages/home.tmpl",
+	}
+	// cwd, _ := os.Getwd()
+	// log.Println("Current working directory:", cwd) //for debugging errors parsing the html templates
+
+	ts, err := template.ParseFiles(files...) // Reading or parsing the template into a template set
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	err = ts.ExecuteTemplate(w, "base", nil) // Writing the template content as the response body and inserting data in the template (Second argument)
+
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	// w.Write([]byte("Hello from Snippetbox")) // Placeholder message to write to the html body
 }
 
 func snippetView(w http.ResponseWriter, r *http.Request) {
