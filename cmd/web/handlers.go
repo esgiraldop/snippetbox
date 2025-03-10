@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"text/template"
 )
@@ -22,6 +21,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	files := []string{
 		"./ui/html/base.tmpl",
 		"./ui/html/pages/home.tmpl",
+		"./ui/html/partials/nav.tmpl",
 	}
 	// cwd, _ := os.Getwd()
 	// log.Println("Current working directory:", cwd) //for debugging errors parsing the html templates

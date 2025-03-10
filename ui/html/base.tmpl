@@ -4,11 +4,23 @@
     <head>
         <meta charset='utf-8'>
         <title>{{template "title" .}} - Snippetbox</title>
+        <!-- Link to the CSS stylesheet and favicon -->
+        <link rel='stylesheet' href='/static/css/main.css'>
+        <link rel='shortcut icon' href='/static/img/favicon.ico' type='image/x-icon'>
+        <!-- Also link to some fonts hosted by Google -->
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700'>
     </head>
     <body>
         <header>
             <h1><a href='/'>Snippetbox</a></h1>
         </header>
+
+        <!-- {{template "nav" .}} -->
+
+        <!-- The next block of code is the same than invoking the template, but it allows in addition to place some fallback content in case the template cannot be loaded -->
+        {{block "nav" .}}
+            <p>My default navbar</p>
+        {{end}}
         <main>
             {{template "main" .}}
         </main>
