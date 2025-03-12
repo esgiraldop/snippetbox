@@ -7,6 +7,12 @@ import (
 	"os"
 )
 
+// Defining a struct to hold the application-wide dependencies with dependency injection
+type application struct {
+	errorLog *log.Logger
+	infoLog  *log.Logger
+}
+
 func main() {
 	// Defining a command-line flag with default value for 4000 for the port number
 	addr := flag.String("addr", ":4000", "HTTP network address")
@@ -16,13 +22,16 @@ func main() {
 
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile) // Creating a logger for writting error messages
 
+	// Instantiating my application
+	app := application{errorLog, errorLog}
+
 	mux := http.NewServeMux() // To initialize a servermux or router
 
 	fileServer := http.FileServer(http.Dir("./ui/static/")) // To serve static files within that folder, so we can use them from the template (.tpml) files.
 
-	mux.HandleFunc("/", home)                    // Registering a handler or a controller to a route
-	mux.HandleFunc("/snippet/view", snippetView) // HandleFunc is syntantic sugar of "http.Handle" and "http.HandlerFunc", so it transforms a function into a handler and registers it in the server mux in a single step
-	mux.HandleFunc("/snippet/create", snippetCreate)
+	mux.HandleFunc("/", app.home)                    // Registering a handler or a controller to a route
+	mux.HandleFunc("/snippet/view", app.snippetView) // HandleFunc is syntantic sugar of "http.Handle" and "http.HandlerFunc", so it transforms a function into a handler and registers it in the server mux in a single step
+	mux.HandleFunc("/snippet/create", app.snippetCreate)
 
 	// Use the mux.Handle() function to register the file server as the handler for
 	// all URL paths that start with "/static/". For matching paths, we strip the
