@@ -40,7 +40,7 @@ func main() {
 	// Instantiating my db model
 	snippetModel := models.SnippetModel{DB: db}
 	// Instantiating my application
-	app := application{errorLog, infoLog, &snippetModel}
+	app := &application{errorLog, infoLog, &snippetModel}
 
 	mux := app.routes()
 

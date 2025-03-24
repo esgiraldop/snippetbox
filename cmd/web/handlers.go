@@ -69,5 +69,19 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte("Create a new snippet..."))
+	title := "O snail"
+	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n– Kobayashi Issa"
+	expires := 7
+
+	id, err := app.snippets.Insert(title, content, expires)
+
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	// w.Write([]byte("New snippet with id %s was created sucessfully."), ) // To return response in the body
+
+	// fmt.Fprintf(w, "New snippet with id %d was created sucessfully.", id) // w can only be called once. This should be the preferred answer for an API
+	http.Redirect(w, r, fmt.Sprintf("/snippet/view?id=%d", id), http.StatusSeeOther) // Preferred answer for a wep app (As opposed to an API)
 }
