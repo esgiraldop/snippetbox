@@ -1,1 +1,1 @@
-This folder is intentionally left empty for future use.
+"Internal" is a reserved word in go. Any packages that live under this directory can only be imported by code inside the parent of the "internal" directory. This prevents other codebases from importing and relying on the (potentially unversioned and unsupported) packages in our internal directory, even if project code is publicly available somewhere like GitHub
