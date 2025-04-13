@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
 	"text/template"
+
+	"snippetbox.esgiraldop.com/internal/models"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -52,7 +55,20 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 
 	// w.Write([]byte("Display a specific snippet..."))
 
-	fmt.Fprintf(w, "Display a specific snippet with ID %d...", id) // Does the same than w.Write but on top of that, it interpolates the string with variables
+	// fmt.Fprintf(w, "Display a specific snippet with ID %d...", id) // Does the same than w.Write but on top of that, it interpolates the string with variables
+
+	s, err := app.snippets.Get(id)
+
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFoundError(w)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	fmt.Fprintf(w, "%+v", s)
 }
 
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
